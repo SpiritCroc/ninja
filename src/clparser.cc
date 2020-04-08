@@ -16,6 +16,7 @@
 
 #include <algorithm>
 #include <assert.h>
+#include <stdio.h>
 #include <string.h>
 
 #include "metrics.h"
@@ -104,8 +105,10 @@ bool CLParser::Parse(const string& output, const string& deps_prefix,
       if (!CanonicalizePath(&normalized, &slash_bits, err))
         return false;
 #endif
-      if (!IsSystemInclude(normalized))
+      if (!IsSystemInclude(normalized)) {
+	      fprintf(stderr, "clparser.cc\n");
         includes_.insert(normalized);
+      }
     } else if (FilterInputFilename(line)) {
       // Drop it.
       // TODO: if we support compiling multiple output files in a single

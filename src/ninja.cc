@@ -612,6 +612,7 @@ int ToolTargetsList(State* state, const string& rule_name) {
     if ((*e)->rule_->name() == rule_name) {
       for (vector<Node*>::iterator out_node = (*e)->outputs_.begin();
            out_node != (*e)->outputs_.end(); ++out_node) {
+	fprintf(stderr, "ninja.cc\n");
         rules.insert((*out_node)->path());
       }
     }
@@ -723,6 +724,7 @@ enum PrintCommandMode { PCM_Single, PCM_All };
 void PrintCommands(Edge* edge, EdgeSet* seen, PrintCommandMode mode) {
   if (!edge)
     return;
+  fprintf(stderr, "second\n");
   if (!seen->insert(edge).second)
     return;
 

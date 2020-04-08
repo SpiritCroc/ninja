@@ -712,6 +712,7 @@ std::vector<Edge*> Node::GetOutEdges() const {
 
   // Add extra out-edges from depfiles and the deps log. Preserve the order
   // of these extra edges; don't sort them.
+  fprintf(stderr, "graph1\n");
   std::copy(dep_scan_out_edges_.begin(), dep_scan_out_edges_.end(),
             std::back_inserter(result));
 
@@ -817,6 +818,7 @@ bool ImplicitDepLoader::LoadDepFile(Edge* edge, const string& path,
                           err))
       return false;
 
+    fprintf(stderr, "graph 10\n");
     Node* node = state_->GetNode(*i, slash_bits);
     *implicit_dep = node;
     node->AddOutEdgeDepScan(edge);
@@ -855,6 +857,7 @@ bool ImplicitDepLoader::LoadDepsFromLog(Edge* edge, string* err) {
 
 vector<Node*>::iterator ImplicitDepLoader::PreallocateSpace(Edge* edge,
                                                             int count) {
+  fprintf(stderr, "graph2\n");
   edge->inputs_.insert(edge->inputs_.end() - edge->order_only_deps_,
                        (size_t)count, 0);
   edge->implicit_deps_ += count;

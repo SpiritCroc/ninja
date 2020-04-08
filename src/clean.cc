@@ -64,6 +64,7 @@ void Cleaner::Report(const string& path) {
 
 void Cleaner::Remove(const string& path) {
   if (!IsAlreadyRemoved(path)) {
+	  fprintf(stderr, "clean1\n");
     removed_.insert(path);
     if (config_.dry_run) {
       if (FileExists(path))
@@ -150,6 +151,7 @@ void Cleaner::DoCleanTarget(Node* target) {
   }
 
   // mark this target to be cleaned already
+	  fprintf(stderr, "clean2\n");
   cleaned_.insert(target);
 }
 

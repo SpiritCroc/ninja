@@ -25,6 +25,7 @@
 #include <assert.h>
 #include <errno.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 
 #ifndef _WIN32
@@ -172,6 +173,7 @@ bool BuildLog::RecordCommand(Edge* edge, int start_time, int end_time,
       log_entry = *i;
     } else {
       log_entry = new LogEntry(path);
+      fprintf(stderr, "build_log1\n");
       entries_.insert(Entries::value_type(log_entry->output, log_entry));
     }
     log_entry->command_hash = command_hash;
@@ -406,6 +408,7 @@ bool BuildLog::Load(const string& path, string* err) {
       } else {
         std::unique_ptr<LogEntry> new_entry(new LogEntry(path));
         new_entry->newest_parsed_line = line.data() - log.content.data();
+      fprintf(stderr, "build_log2\n");
         if (entries_.insert({ new_entry->output, new_entry.get() }).second) {
           chunk_entries_list.push_back(new_entry.release());
           return;
@@ -428,6 +431,7 @@ bool BuildLog::Load(const string& path, string* err) {
   std::vector<LogEntry*> entries_vec;
   entries_vec.reserve(entries_.size());
   for (auto& chunk : chunk_new_entries) {
+      fprintf(stderr, "build_log3\n");
     std::move(chunk.begin(), chunk.end(), std::back_inserter(entries_vec));
   }
 
@@ -512,6 +516,7 @@ bool BuildLog::Recompact(const string& path, const BuildLogUser& user,
     if (user.IsPathDead(pair.first.str_view()))
       continue;
 
+      fprintf(stderr, "build_log4\n");
     new_entries.insert(pair);
 
     if (!WriteEntry(f, *pair.second)) {

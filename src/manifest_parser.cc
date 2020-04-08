@@ -16,6 +16,7 @@
 
 #include <assert.h>
 
+#include <stdio.h>
 #include <unordered_map>
 #include <vector>
 
@@ -287,6 +288,7 @@ static inline bool AddPathToEdge(State* state, const Edge& edge,
     key = work_buf;
   }
 
+  fprintf(stderr, "manifest_parser\n");
   Node* node = state->GetNode(key, 0);
   node->UpdateFirstReference(edge.dfs_location(), slash_bits);
   out_vec->push_back(node);

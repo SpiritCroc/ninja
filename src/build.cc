@@ -109,6 +109,7 @@ bool Plan::AddSubTarget(Node* node, Node* dependent, string* err) {
 
   // If an entry in want_ does not already exist for edge, create an entry which
   // maps to kWantNothing, indicating that we do not want to build this entry itself.
+  fprintf(stderr, "build1\n");
   pair<map<Edge*, Want>::iterator, bool> want_ins =
     want_.insert(make_pair(edge, kWantNothing));
   Want& want = want_ins.first->second;
@@ -163,6 +164,7 @@ void Plan::ScheduleWork(map<Edge*, Want>::iterator want_e) {
     pool->RetrieveReadyEdges(&ready_);
   } else {
     pool->EdgeScheduled(*edge);
+  fprintf(stderr, "build2\n");
     ready_.insert(edge);
   }
 }
@@ -326,7 +328,9 @@ bool RealCommandRunner::StartCommand(Edge* edge) {
   Subprocess* subproc = subprocs_.Add(command, edge->use_console());
   if (!subproc)
     return false;
+  fprintf(stderr, "build3 -%s-\n", command.c_str());
   subproc_to_edge_.insert(make_pair(subproc, edge));
+  fprintf(stderr, "build3 done\n");
 
   return true;
 }
@@ -530,6 +534,7 @@ bool Builder::StartEdge(Edge* edge, string* err) {
     return true;
 
   int64_t start_time_millis = GetTimeMillis() - start_time_millis_;
+  fprintf(stderr, "build4\n");
   running_edges_.insert(make_pair(edge, start_time_millis));
 
   status_->BuildEdgeStarted(edge, start_time_millis);
@@ -755,6 +760,7 @@ bool Builder::ExtractDeps(CommandRunner::Result* result,
       // all backslashes (as some of the slashes will certainly be backslashes
       // anyway). This could be fixed if necessary with some additional
       // complexity in IncludesNormalize::Relativize.
+	fprintf(stderr, "build 11\n");
       deps_nodes->push_back(state_->GetNode(*i, ~0u));
     }
   } else
@@ -800,6 +806,7 @@ bool Builder::ExtractDeps(CommandRunner::Result* result,
       if (!CanonicalizePath(const_cast<char*>(i->str_), &i->len_, &slash_bits,
                             err))
         return false;
+	fprintf(stderr, "build 12 -%s-\n", depfile.c_str());
       deps_nodes->push_back(state_->GetNode(*i, slash_bits));
     }
 

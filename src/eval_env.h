@@ -17,6 +17,7 @@
 
 #include <assert.h>
 #include <stdint.h>
+#include <stdio.h>
 
 #include <map>
 #include <mutex>
@@ -176,6 +177,7 @@ struct Scope {
   std::string LookupVariable(const HashedStrView& var);
 
   bool AddRule(Rule* rule) {
+    fprintf(stderr, "eval_env\n");
     return rules_.insert({ rule->name_hashed(), rule }).second;
   }
 

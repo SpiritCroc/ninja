@@ -17,6 +17,7 @@
 
 #include <atomic>
 #include <set>
+#include <stdio.h>
 #include <string>
 #include <vector>
 using namespace std;
@@ -97,7 +98,12 @@ inline bool operator<(const NodeFirstReference& x,
 struct Node {
   Node(const HashedStrView& path, uint64_t initial_slash_bits)
       : path_(path),
-        first_reference_({ kLastDeclIndex, initial_slash_bits }) {}
+        first_reference_({ kLastDeclIndex, initial_slash_bits }) {
+		if (path.size() == 0) {
+			fprintf(stderr, "Adding empty path\n");
+		}
+		//fprintf(stderr, "Add -%s-\n", path.data());
+	}
   ~Node();
 
   /// Precompute the node's Stat() call from a worker thread with exclusive

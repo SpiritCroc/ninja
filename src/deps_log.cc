@@ -399,7 +399,7 @@ static bool OpenDepsLogForReading(const std::string& path,
   }
 
   log->data.words =
-      reinterpret_cast<const uint32_t*>(
+          reinterpret_cast<const uint32_t*>(
           log->file->content().data() + kFileHeaderSize);
   log->data.size =
       (log->file->content().size() - kFileHeaderSize) / sizeof(uint32_t);
@@ -587,6 +587,7 @@ bool DepsLog::Load(const string& path, State* state, string* err) {
         // already have a correct slash_bits that GetNode will look up), or it
         // is an implicit dependency from a .d which does not affect the build
         // command (and so need not have its slashes maintained).
+	fprintf(stderr, "deps_log 10\n");
         Node* node = state->GetNode(record.u.path.path, 0);
         assert(node->id() < 0);
         node->set_id(node_id);
@@ -772,6 +773,7 @@ bool DepsLog::RecordId(Node* node) {
   if (fwrite(&size, 4, 1, file_) < 1)
     return false;
   if (fwrite(node->path().data(), path_size, 1, file_) < 1) {
+    fprintf(stderr, "Node path: -%s-\n", node->path().c_str());
     assert(node->path().size() > 0);
     return false;
   }

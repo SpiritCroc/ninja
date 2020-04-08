@@ -26,6 +26,7 @@ void GraphViz::AddTarget(Node* node) {
   string pathstr = node->path();
   replace(pathstr.begin(), pathstr.end(), '\\', '/');
   printf("\"%p\" [label=\"%s\"]\n", node, pathstr.c_str());
+  fprintf(stderr, "viz1\n");
   visited_nodes_.insert(node);
 
   Edge* edge = node->in_edge();
@@ -38,6 +39,7 @@ void GraphViz::AddTarget(Node* node) {
 
   if (visited_edges_.find(edge) != visited_edges_.end())
     return;
+  fprintf(stderr, "viz2\n");
   visited_edges_.insert(edge);
 
   if (edge->inputs_.size() == 1 && edge->outputs_.size() == 1) {

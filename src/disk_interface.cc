@@ -119,6 +119,7 @@ bool StatAllFilesInDir(const string& dir, map<string, TimeStamp>* stamps,
       continue;
     }
     transform(lowername.begin(), lowername.end(), lowername.begin(), ::tolower);
+  fprintf(stderr, "di1\n");
     stamps->insert(make_pair(lowername,
                              TimeStampFromFileTime(ffd.ftLastWriteTime)));
   } while (FindNextFileA(find_handle, &ffd));
@@ -209,6 +210,7 @@ TimeStamp RealDiskInterface::Stat(const string& path, string* err) const {
 
   Cache::iterator ci = cache_.find(dir);
   if (ci == cache_.end()) {
+  fprintf(stderr, "di2\n");
     ci = cache_.insert(make_pair(dir, DirCache())).first;
     if (!StatAllFilesInDir(dir.empty() ? "." : dir, &ci->second, err)) {
       cache_.erase(ci);

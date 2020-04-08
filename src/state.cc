@@ -38,6 +38,7 @@ void Pool::EdgeFinished(const Edge& edge) {
 
 void Pool::DelayEdge(Edge* edge) {
   assert(depth_ != 0);
+  fprintf(stderr, "state\n");
   delayed_.insert(edge);
 }
 
@@ -47,6 +48,7 @@ void Pool::RetrieveReadyEdges(EdgeSet* ready_queue) {
     Edge* edge = *it;
     if (current_use_ + edge->weight() > depth_)
       break;
+  fprintf(stderr, "state1\n");
     ready_queue->insert(edge);
     EdgeScheduled(*edge);
     ++it;
@@ -84,6 +86,7 @@ void State::AddBuiltinRule(Rule* rule) {
 }
 
 bool State::AddPool(Pool* pool) {
+  fprintf(stderr, "state2\n");
   return pools_.insert({ pool->name_hashed(), pool }).second;
 }
 
@@ -116,8 +119,12 @@ Node* State::GetNode(const HashedStrView& path, uint64_t slash_bits) {
     return *opt_node;
   // Create a new node and try to insert it.
   std::unique_ptr<Node> node(new Node(path, slash_bits));
-  if (paths_.insert({node->path_hashed(), node.get()}).second)
+  fprintf(stderr, "state3\n");
+  if (paths_.insert({node->path_hashed(), node.get()}).second) {
+  fprintf(stderr, "state3 release done\n");
     return node.release();
+  }
+  fprintf(stderr, "state3 done\n");
   // Another thread beat us to it. Use its node instead.
   return *paths_.Lookup(path);
 }
@@ -152,12 +159,14 @@ Node* State::SpellcheckNode(StringPiece path) {
 }
 
 void State::AddIn(Edge* edge, StringPiece path, uint64_t slash_bits) {
+  fprintf(stderr, "state 11\n");
   Node* node = GetNode(path, slash_bits);
   edge->inputs_.push_back(node);
   node->AddOutEdge(edge);
 }
 
 bool State::AddOut(Edge* edge, StringPiece path, uint64_t slash_bits) {
+  fprintf(stderr, "state 12\n");
   Node* node = GetNode(path, slash_bits);
   if (node->in_edge())
     return false;

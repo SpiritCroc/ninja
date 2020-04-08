@@ -20,6 +20,7 @@
 #include <atomic>
 #include <memory>
 #include <thread>
+#include <stdio.h>
 #include <utility>
 #include <vector>
 
@@ -108,7 +109,9 @@ public:
   /// thread-safe while iteration isn't, so returning an iterator seemed
   /// hazardous.
   std::pair<V*, bool> insert(const value_type& value) {
+    fprintf(stderr, "ins %lld\n", value);
     size_t hash = std::hash<K>()(value.first);
+    fprintf(stderr, "insert %lld\n", hash);
     std::unique_ptr<Node> node(new Node(hash, value));
     std::pair<Node*, bool> result = InsertNode(std::move(node));
     return { &result.first->value.second, result.second };
